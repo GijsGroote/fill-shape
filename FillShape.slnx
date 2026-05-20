@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FillShapeApp/FillShapeApp.csproj" />
+  <Project Path="TestFillShapeApp/TestFillShapeApp.csproj" />
+</Solution>

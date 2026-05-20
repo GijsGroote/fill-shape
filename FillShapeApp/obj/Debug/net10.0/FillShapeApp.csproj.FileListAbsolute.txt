@@ -1,0 +1,14 @@
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.GeneratedMSBuildEditorConfig.editorconfig
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.AssemblyInfoInputs.cache
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.AssemblyInfo.cs
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.csproj.CoreCompileInputs.cache
+/home/gijs/Documents/fill-shape/FillShapeApp/bin/Debug/net10.0/FillShapeApp
+/home/gijs/Documents/fill-shape/FillShapeApp/bin/Debug/net10.0/FillShapeApp.deps.json
+/home/gijs/Documents/fill-shape/FillShapeApp/bin/Debug/net10.0/FillShapeApp.runtimeconfig.json
+/home/gijs/Documents/fill-shape/FillShapeApp/bin/Debug/net10.0/FillShapeApp.dll
+/home/gijs/Documents/fill-shape/FillShapeApp/bin/Debug/net10.0/FillShapeApp.pdb
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.dll
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/refint/FillShapeApp.dll
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.pdb
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/FillShapeApp.genruntimeconfig.cache
+/home/gijs/Documents/fill-shape/FillShapeApp/obj/Debug/net10.0/ref/FillShapeApp.dll
