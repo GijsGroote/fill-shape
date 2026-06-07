@@ -1,9 +1,9 @@
 // class that holds the grid, initializes the shape outline, has a draw function and also contains the algorithms to fill the shape
-
 using System;
 using System.ComponentModel.Design;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
+
 
 namespace FillShapeApp;
 
@@ -78,11 +78,6 @@ public class Grid
         Console.Write("└");
         Console.Write(new string('─', Columns * 2 - 1));
         Console.WriteLine("┘");
-    }
-
-    public void Draw()
-    {
-        // Draw the grid, if the grid is already present as figure, update that figure
     }
 
     public void FillShapeSingleQueue((int row, int col) StartingPoint)
