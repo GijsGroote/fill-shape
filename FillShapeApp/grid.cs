@@ -10,10 +10,26 @@ namespace FillShapeApp;
 
 public class Grid
 {
+
     private readonly int[,] _cells;
+    private (int, int) _initial_start_point;
+
+    private List<(int, int)> _ordered_filled_cells = new();
+    public IReadOnlyList<(int, int)> OrderedFilledCells => _ordered_filled_cells;
+
 
     public int Rows    { get; }
     public int Columns { get; }
+
+    public (int row, int col) InitialStartPoint
+    {
+        get => _initial_start_point;
+        set
+        {
+            ValidateBounds(value.row, value.col);
+            _initial_start_point = value;
+        }
+    }
 
     public Grid(int rows, int columns)
     {
@@ -53,6 +69,13 @@ public class Grid
             throw new IndexOutOfRangeException(
                 $"Column {col} is out of range. Valid range: 0–{Columns - 1}.");
         }
+    }
+
+    public void AddFilledCell(int row, int col)
+    {
+        this.ValidateBounds(row, col);
+
+        _ordered_filled_cells.Add((row, col));
     }
 
     public void PrintGrid()
@@ -111,11 +134,10 @@ public class Grid
         // add points to directional queue
     }
 
-    public void FillShapeRecursively((int row, int col) StartingPoint)
+    public void FillShapeRecursively((int row, int col) StartPoint = default)
     {
-        // assume that a shape contour is draw in the grid
         // assume that the starting point in within the shape contour
-        var (row, col) = StartingPoint;
+        var (row, col) = StartPoint == default ? _initial_start_point : StartPoint;
 
         // if StartingPoint is 1, return
         if (this[row, col] == 1) {
@@ -124,6 +146,7 @@ public class Grid
 
         // else make Stating point 1
         this[row,col] = 1;
+        this.AddFilledCell(row,col);
 
         // call function FillShapeRecursively recursively for every neighboring point which is 0.
         foreach ((int d_row, int d_col) in new[]{(1, 0), (-1, 0), (0, 1), (0, -1)})

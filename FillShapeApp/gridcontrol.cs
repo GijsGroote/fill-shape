@@ -11,6 +11,7 @@ public class GridControl : Control
 {
     // grid property
     private AppGrid? _grid;
+    private int _filled_cells_idx = 0;
 
     public AppGrid? Grid
     {
@@ -31,6 +32,7 @@ public override void Render(DrawingContext context)
         if (_grid == null)
             return;
 
+        // Render the grid
         for (int row = 0; row < _grid.Rows; row++)
         {
             for (int col = 0; col < _grid.Columns; col++)
@@ -54,5 +56,21 @@ public override void Render(DrawingContext context)
                     rect);
             }
         }
+
+        // Starting point
+        var startRect = new Rect(
+            _grid.InitialStartPoint.col * CellSize,
+            _grid.InitialStartPoint.row * CellSize,
+            CellSize,
+            CellSize);
+
+        context.DrawEllipse(
+            Brushes.Red,
+            null,
+            startRect.Center,
+            CellSize / 3.0,
+            CellSize / 3.0);
+
+
     }
 }

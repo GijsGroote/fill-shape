@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FillShapeApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d42412203610292b6c03838e54d42130e5fb7f2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6faa98e9c0f384459df7d31f4b1b0e1c939d25ce")]
 [assembly: System.Reflection.AssemblyProductAttribute("FillShapeApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FillShapeApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

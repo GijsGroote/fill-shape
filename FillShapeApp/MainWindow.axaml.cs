@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using AppGrid = FillShapeApp.Grid;
 
 namespace FillShapeApp;
@@ -10,38 +11,68 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        Grid grid = new(rows: 300, columns: 300);
-        (int row, int col)[] corners = [
-            (1,1),
-            (1,28),
-            (28,28),
-            (28,1),
-        ];
-        grid.SetRectangleContour(corners);
+        Grid grid = new(rows: 30, columns: 35);
+        grid.SetRectangleContour([ (1,1), (1,28), (28,28), (28,1) ]);
 
 
         // // 1. Create and populate your grid
         // var grid = new AppGrid(30, 30);
         // grid.SetCircleContour((15, 15), 10);
-        // grid.FillShapeRecursively((15, 15));
+        grid.InitialStartPoint = (15, 15);
+        grid.FillShapeRecursively();
+
         //
         // assume that the screen is 1920 by 1080
-        var AppWidth = 1200;
-        var AppHeigth = 800;
+        //
 
-        Console.WriteLine("grid.rows"+grid.Rows+" AppHeight: "+AppHeigth+" grid.coluns "+grid.Columns+" AppWith: "+AppWidth);
+        // var GridWidth = this.Width;
+        // var GridHeight = this.Heigth - ButtonPanel.Height;
+        var buttonPanelTotalHeight = ButtonPanel.Height + 
+                                     ButtonPanel.Margin.Top +
+                                     ButtonPanel.Margin.Bottom;
 
-        Console.WriteLine("jajajajja"+Math.Min(AppHeigth/grid.Rows, AppWidth/grid.Columns));
+        var CellSize = (int)Math.Floor( Math.Min(
+                                            (this.Height - buttonPanelTotalHeight) / grid.Rows,
+                                            this.Width / grid.Columns));
+
+        if (CellSize == 0)
+        {
+            throw new NotImplementedException("CellSize is smaller than a single pixel.");
+            
+        }
 
 
         // 2. Create the control and assign the grid
         var gridControl = new GridControl
         {
             Grid = grid,
-            CellSize = Math.Min(AppHeigth/grid.Rows, AppWidth/grid.Columns)
+            CellSize = CellSize,
         };
 
         // 3. Put it in the window
-        Content = gridControl;
+        MainGrid.Grid = grid;
+        MainGrid.CellSize = CellSize;
+        MainGrid.InvalidateVisual();
+    }
+
+    private void OnButtonMinManyStepsClick(object? sender, RoutedEventArgs e)
+    {
+        Console.WriteLine("MinManySteps");
+    }
+    private void OnButtonMinSmallStepClick(object? sender, RoutedEventArgs e) 
+    {
+    	Console.WriteLine("MinSmallSteps");
+    }
+    private void OnButtonPlayClick(object? sender, RoutedEventArgs e) 
+    {
+    	Console.WriteLine("Play/Pause");
+    }
+    private void OnButtonPlusSmallStepClick(object? sender, RoutedEventArgs e) 
+    {
+    	Console.WriteLine("PlusSmallStep");
+    }
+    private void OnButtonPlusManyStepsClick(object? sender, RoutedEventArgs e) 
+    {
+    	Console.WriteLine("PlusManySteps");
     }
 }

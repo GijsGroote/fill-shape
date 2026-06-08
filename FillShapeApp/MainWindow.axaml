@@ -1,6 +1,30 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FillShapeApp"
         x:Class="FillShapeApp.MainWindow"
         Title="FillShapeApp"
         Width="1200" Height="800">
+
+   <DockPanel>
+
+        <!-- Buttons docked to the bottom -->
+        <StackPanel x:Name="ButtonPanel"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Height="50"
+                    Spacing="10"
+                    Margin="0,10">
+            <Button Click="OnButtonMinManyStepsClick">-10</Button>
+            <Button Click="OnButtonMinSmallStepClick">-1</Button>
+            <Button Click="OnButtonPlayClick">Play/Pause</Button>
+            <Button Click="OnButtonPlusSmallStepClick">+1</Button>
+            <Button Click="OnButtonPlusManyStepsClick">+10</Button>
+        </StackPanel>
+
+        <!-- GridControl fills the remaining space -->
+        <local:GridControl x:Name="MainGrid" ClipToBounds="True" />
+
+    </DockPanel>
+
 </Window>
