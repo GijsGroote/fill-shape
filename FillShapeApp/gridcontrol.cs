@@ -37,23 +37,11 @@ public override void Render(DrawingContext context)
         {
             for (int col = 0; col < _grid.Columns; col++)
             {
-                var rect = new Rect(
-                    col * CellSize,
-                    row * CellSize,
-                    CellSize,
-                    CellSize);
-
-                var brush =
-                    _grid[row, col] == 1
+                var color = _grid[row, col] == 1
                     ? Brushes.Black
                     : Brushes.White;
 
-                context.FillRectangle(brush, rect);
-
-                context.DrawRectangle(
-                    null,
-                    new Pen(Brushes.Gray, 1),
-                    rect);
+                DrawRectangle(row, col, color)
             }
         }
 
@@ -70,7 +58,20 @@ public override void Render(DrawingContext context)
             startRect.Center,
             CellSize / 3.0,
             CellSize / 3.0);
+    }
+    private void DrawRectangle(row, col, color)
+    {
+        var rect = new Rect(
+            col * CellSize,
+            row * CellSize,
+            CellSize,
+            CellSize);
 
+        context.FillRectangle(Brushes.Black, rect);
 
+        context.DrawRectangle(
+            null,
+            new Pen(color, 1),
+            rect);
     }
 }
