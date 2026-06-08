@@ -53,10 +53,17 @@ public override void Render(DrawingContext context)
             
         }
 
+        // Draw the shape's contour
+        foreach ((int row, int col) in _grid.ContourCells)
+        {
+            DrawColoredRectangle(row, col, Brushes.Green, context);
+        }
+
+
         // Starting point
         var startRect = new Rect(
-            _grid.InitialStartPoint.col * CellSize,
-            _grid.InitialStartPoint.row * CellSize,
+            _grid.InitialStartCell.col * CellSize,
+            _grid.InitialStartCell.row * CellSize,
             CellSize,
             CellSize);
 
@@ -84,7 +91,7 @@ public override void Render(DrawingContext context)
     }
     public void TakeSteps(int steps = 1)
     {
-        _max_filled_cells_idx += steps;
+        _max_filled_cells_idx = Math.Clamp(_max_filled_cells_idx + steps, 0, _grid.OrderedFilledCells.Count);
         InvalidateVisual();
     }
 }

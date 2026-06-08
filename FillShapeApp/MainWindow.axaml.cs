@@ -11,14 +11,16 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        Grid grid = new(rows: 30, columns: 35);
-        grid.SetRectangleContour([ (1,1), (1,28), (28,28), (28,1) ]);
-
+        Grid grid = new AppGrid(rows: 30, columns: 35);
+        // grid.SetRectangleContour([ (1,1), (1,28), (28,28), (28,1) ]);
+        // Console.WriteLine("the contorucellsk");
+        grid.SetCircleContour((15, 15), 10);
+            
 
         // // 1. Create and populate your grid
         // var grid = new AppGrid(30, 30);
         // grid.SetCircleContour((15, 15), 10);
-        grid.InitialStartPoint = (15, 15);
+        grid.InitialStartCell = (7, 15);
         grid.FillShapeRecursively();
 
         //

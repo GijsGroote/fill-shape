@@ -12,22 +12,26 @@ public class Grid
 {
 
     private readonly int[,] _cells;
-    private (int, int) _initial_start_point;
+    private (int, int) _initial_start_cell;
+    private readonly HashSet<(int, int)> _contour_cells= new();
 
     private List<(int, int)> _ordered_filled_cells = new();
     public IReadOnlyList<(int, int)> OrderedFilledCells => _ordered_filled_cells;
 
-
     public int Rows    { get; }
     public int Columns { get; }
 
-    public (int row, int col) InitialStartPoint
+    public HashSet<(int, int)> ContourCells => _contour_cells;
+    public void AddContourCells(IEnumerable<(int, int)> cells) => _contour_cells.UnionWith(cells);
+    public void AddContourCell((int, int) cell) => _contour_cells.Add(cell);
+    
+    public (int row, int col) InitialStartCell
     {
-        get => _initial_start_point;
+        get => _initial_start_cell;
         set
         {
             ValidateBounds(value.row, value.col);
-            _initial_start_point = value;
+            _initial_start_cell = value;
         }
     }
 
@@ -103,7 +107,7 @@ public class Grid
         Console.WriteLine("┘");
     }
 
-    public void FillShapeSingleQueue((int row, int col) StartingPoint)
+    public void FillShapeSingleQueue((int row, int col) StartingCell)
     {
         // assume that a shape contour is draw in the grid
         // assume that the starting point in within the shape contour
@@ -119,7 +123,7 @@ public class Grid
 
     }
     
-    public void FillShapeDirectionalQueues((int row, int col) StartingPoint)
+    public void FillShapeDirectionalQueues((int row, int col) StartingCell)
     {
         // assume that a shape contour is draw in the grid
         // assume that the starting point in within the shape contour
@@ -134,12 +138,12 @@ public class Grid
         // add points to directional queue
     }
 
-    public void FillShapeRecursively((int row, int col) StartPoint = default)
+    public void FillShapeRecursively((int row, int col) StartCell = default)
     {
         // assume that the starting point in within the shape contour
-        var (row, col) = StartPoint == default ? _initial_start_point : StartPoint;
+        var (row, col) = StartCell == default ? _initial_start_cell: StartCell;
 
-        // if StartingPoint is 1, return
+        // if StartingCell is 1, return
         if (this[row, col] == 1) {
             return;
         }
@@ -163,18 +167,7 @@ public class Grid
         return Math.Sqrt(dRow * dRow + dCol * dCol);
     }
 
-    private void SetLineContour((int row, int col)[] corners)
-    {
-        if (corners.Length < 2)
-            throw new ArgumentException("Need at least 2 corners to draw a line.");
-
-        for (int i = 0; i < corners.Length - 1; i++)
-        {
-            DrawLine(corners[i], corners[i + 1]);
-        }
-    }
-
-    private void DrawLine((int row, int col) start, (int row, int col) end)
+    private List<(int, int)> DrawLine((int row, int col) start, (int row, int col) end)
     {
         int row0 = start.row, col0 = start.col;
         int row1 = end.row,   col1 = end.col;
@@ -187,9 +180,12 @@ public class Grid
 
         int err = dCol - dRow;
 
+        List<(int, int)> CellsDrawn = new();
+
         while (true)
         {
             this[row0, col0] = 1;
+            CellsDrawn.Add((row0, col0));
 
             if (row0 == row1 && col0 == col1) break;
 
@@ -198,7 +194,42 @@ public class Grid
             if (e2 > -dRow) { err -= dRow; col0 += stepCol; }
             if (e2 <  dCol) { err += dCol; row0 += stepRow; }
         }
+
+        return CellsDrawn;
     }
+
+    private void SetCircleCells((int row, int col) center, int row, int col)
+    {
+        List<(int, int)> CircleCells = new List<(int, int)> {
+                (center.row + row, center.col + col),
+                (center.row - row, center.col + col),
+                (center.row + row, center.col - col),
+                (center.row - row, center.col - col),
+                (center.row + col, center.col + row),
+                (center.row - col, center.col + row),
+                (center.row + col, center.col - row),
+                (center.row - col, center.col - row),
+        };
+
+        foreach ((int, int) CircleCell in CircleCells)
+        {
+            this[CircleCell.Item1, CircleCell.Item2] = 1;
+            AddContourCell(CircleCell);
+        }
+    }
+
+    private void SetLineContour((int row, int col)[] corners)
+    {
+        if (corners.Length < 2)
+            throw new ArgumentException("Need at least 2 corners to draw a line.");
+
+        for (int i = 0; i < corners.Length - 1; i++)
+        {
+            var DrawnCells = DrawLine(corners[i], corners[i + 1]);
+            AddContourCells(DrawnCells);
+        }
+    }
+
 
     public void SetRectangleContour((int row, int col)[] corners)
     {
@@ -222,17 +253,6 @@ public class Grid
         this.SetLineContour([corners[0], corners[3]]);
     }
 
-    private void SetCirclePoints((int row, int col) center, int row, int col)
-    {
-        this[center.row + row, center.col + col] = 1;
-        this[center.row - row, center.col + col] = 1;
-        this[center.row + row, center.col - col] = 1;
-        this[center.row - row, center.col - col] = 1;
-        this[center.row + col, center.col + row] = 1;
-        this[center.row - col, center.col + row] = 1;
-        this[center.row + col, center.col - row] = 1;
-        this[center.row - col, center.col - row] = 1;
-    }
 
     public void SetCircleContour((int row, int col) center, int radius)
     {
@@ -246,7 +266,7 @@ public class Grid
         while (temp_row <= temp_col)
         {
             // plots all 8 symmetric points
-            SetCirclePoints(center, temp_row, temp_col);
+            SetCircleCells(center, temp_row, temp_col);
 
             if (diameter < 0)
             {
