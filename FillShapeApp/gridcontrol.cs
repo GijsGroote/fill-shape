@@ -11,7 +11,7 @@ public class GridControl : Control
 {
     // grid property
     private AppGrid? _grid;
-    private int _filled_cells_idx = 0;
+    private int _max_filled_cells_idx;
 
     public AppGrid? Grid
     {
@@ -24,6 +24,7 @@ public class GridControl : Control
     }
 
     public double CellSize { get; set; } = 20;
+    public double MaxFilledCellsIdx { get; set; } = 0;
 
 public override void Render(DrawingContext context)
     {
@@ -38,11 +39,18 @@ public override void Render(DrawingContext context)
             for (int col = 0; col < _grid.Columns; col++)
             {
                 var color = _grid[row, col] == 1
-                    ? Brushes.Black
-                    : Brushes.White;
+                    ? Brushes.White
+                    : Brushes.Black;
 
-                DrawRectangle(row, col, color)
+                DrawColoredRectangle(row, col, color, context);
             }
+        }
+
+        for (int filled_cell_idx = 0; filled_cell_idx < _max_filled_cells_idx; filled_cell_idx++)
+        {
+            (int row, int col) = _grid.OrderedFilledCells[filled_cell_idx];
+            DrawColoredRectangle(row, col, Brushes.Orange, context);
+            
         }
 
         // Starting point
@@ -59,7 +67,7 @@ public override void Render(DrawingContext context)
             CellSize / 3.0,
             CellSize / 3.0);
     }
-    private void DrawRectangle(row, col, color)
+    private void DrawColoredRectangle(int row, int col, IBrush color, DrawingContext context)
     {
         var rect = new Rect(
             col * CellSize,
@@ -67,11 +75,16 @@ public override void Render(DrawingContext context)
             CellSize,
             CellSize);
 
-        context.FillRectangle(Brushes.Black, rect);
+        context.FillRectangle(color, rect);
 
         context.DrawRectangle(
             null,
-            new Pen(color, 1),
+            new Pen(Brushes.Gray, 1),
             rect);
+    }
+    public void TakeSteps(int steps = 1)
+    {
+        _max_filled_cells_idx += steps;
+        InvalidateVisual();
     }
 }

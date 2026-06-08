@@ -57,11 +57,11 @@ public partial class MainWindow : Window
 
     private void OnButtonMinManyStepsClick(object? sender, RoutedEventArgs e)
     {
-        Console.WriteLine("MinManySteps");
+        MainGrid.TakeSteps(-10);
     }
     private void OnButtonMinSmallStepClick(object? sender, RoutedEventArgs e) 
     {
-    	Console.WriteLine("MinSmallSteps");
+        MainGrid.TakeSteps(-1);
     }
     private void OnButtonPlayClick(object? sender, RoutedEventArgs e) 
     {
@@ -69,10 +69,10 @@ public partial class MainWindow : Window
     }
     private void OnButtonPlusSmallStepClick(object? sender, RoutedEventArgs e) 
     {
-    	Console.WriteLine("PlusSmallStep");
+        MainGrid.TakeSteps(1);
     }
     private void OnButtonPlusManyStepsClick(object? sender, RoutedEventArgs e) 
     {
-    	Console.WriteLine("PlusManySteps");
+        MainGrid.TakeSteps(10);
     }
 }
