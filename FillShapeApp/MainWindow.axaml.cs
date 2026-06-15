@@ -44,8 +44,9 @@ public partial class MainWindow : Window
             throw new ArgumentException("Unknown contour type: "+ContourType);
         }
 
-        grid.FillShapeRecursively(direction: AppGrid.ExploreDirection.Vertical);
-        // grid.FillShapeTracked(direction: ExploreDirection.Horizontal);
+        grid.FillShapeIterativelyTracked(direction: AppGrid.ExploreDirection.Vertical);
+        // grid.FillShapeRecursivelyTracked(direction: AppGrid.ExploreDirection.Vertical);
+        // grid.FillShapeTrackedTracked(direction: ExploreDirection.Horizontal);
 
         var buttonPanelTotalHeight = ButtonPanel.Height + 
                                      ButtonPanel.Margin.Top +

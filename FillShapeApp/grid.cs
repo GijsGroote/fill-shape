@@ -144,8 +144,8 @@ public class Grid
     private void FillShapeIterativelyCore((int row, int col) startCell, ExploreDirection direction = ExploreDirection.Horizontal, Action<int, int>? onVisit = null)
     {
         (int, int)[] neighbors = direction == ExploreDirection.Horizontal
-            ? new[] { (0, 1), (0, -1), (1, 0), (-1, 0) }
-            : new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+            ? new[] { (1, 0), (-1, 0), (0, 1), (0, -1) }
+            : new[] { (0, 1), (0, -1), (1, 0), (-1, 0) };
 
         var stack = new Stack<(int, int)>();
         stack.Push(startCell);
