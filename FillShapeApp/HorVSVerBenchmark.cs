@@ -17,7 +17,8 @@ public static class HorizontalVSVerticalBenchmarkTest
         warmup.FillShapeRecursively(direction: AppGrid.ExploreDirection.Vertical);
 
         // RecursiveAlgorithmBenchmark();
-        IterativelyAlgorithmBenchmark();
+        // IterativelyAlgorithmBenchmark();
+        IterativelyAlgorithmBenchmarkLarge();
 
     }
 
@@ -41,6 +42,28 @@ public static class HorizontalVSVerticalBenchmarkTest
         sw.Stop();
         Console.WriteLine("Filled grid iteratively vertically in: " + sw.Elapsed.TotalSeconds + " sec");
     }
+
+    private static void IterativelyAlgorithmBenchmarkLarge()
+    {
+        AppGrid FillHorizontallyGrid = new Grid(50000, 50000);
+        FillHorizontallyGrid.SetRectangleContour([ (5,5), (5,49500), (49500,49500), (49500,5) ]);
+        FillHorizontallyGrid.InitialStartCell = (25, 25);
+
+        AppGrid FillVerticallyGrid = new Grid(50000, 50000);
+        FillVerticallyGrid.SetRectangleContour([ (5,5), (5,49500), (49500,49500), (49500,5) ]);
+        FillVerticallyGrid.InitialStartCell = (25, 25);
+
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        FillHorizontallyGrid.FillShapeIteratively(direction: AppGrid.ExploreDirection.Horizontal);
+        sw.Stop();
+        Console.WriteLine("Filled shape iteratively horizontally in: " + sw.Elapsed.TotalSeconds + " sec");
+
+        sw.Restart();
+        FillVerticallyGrid.FillShapeIteratively(direction: AppGrid.ExploreDirection.Vertical);
+        sw.Stop();
+        Console.WriteLine("Filled grid iteratively vertically in: " + sw.Elapsed.TotalSeconds + " sec");
+    }
+
 
     private static void RecursiveAlgorithmBenchmark()
     {
