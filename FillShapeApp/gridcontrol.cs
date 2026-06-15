@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using System;
+using System.Timers;
 
 using AppGrid = FillShapeApp.Grid;  // alias to avoid conflict
 
@@ -12,6 +14,9 @@ public class GridControl : Control
     // grid property
     private AppGrid? _grid;
     private int _max_filled_cells_idx;
+    private bool _animation_playing;
+    private CancellationTokenSource? _cts;
+    // private static System.Timers.Timer aTimer;
 
     public AppGrid? Grid
     {
@@ -50,7 +55,7 @@ public override void Render(DrawingContext context)
         {
             (int row, int col) = _grid.OrderedFilledCells[filled_cell_idx];
             DrawColoredRectangle(row, col, Brushes.Orange, context);
-            
+
         }
 
         // Draw the shape's contour
@@ -93,5 +98,38 @@ public override void Render(DrawingContext context)
     {
         _max_filled_cells_idx = Math.Clamp(_max_filled_cells_idx + steps, 0, _grid.OrderedFilledCells.Count);
         InvalidateVisual();
+    }
+
+
+    public async void PlayPauseAnimation()
+    {
+        if (_animation_playing)
+        {
+            // Pause: cancel the running animation
+            _cts?.Cancel();
+            _animation_playing = false;
+        }
+        else
+        {
+            // Play: start a fresh animation
+            _cts = new CancellationTokenSource();
+            _animation_playing = true;
+            await AnimateFilledCells(_cts.Token);
+            _animation_playing = false;
+        }
+    }
+
+    private async Task AnimateFilledCells(CancellationToken ct)
+    {
+        while (_max_filled_cells_idx <= _grid.OrderedFilledCells.Count)
+        {
+            InvalidateVisual();
+            try
+            {
+                await Task.Delay(150, ct);
+                _max_filled_cells_idx++;
+            }
+            catch (OperationCanceledException) { break; }
+        }
     }
 }

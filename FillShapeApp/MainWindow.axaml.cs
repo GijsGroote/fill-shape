@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AppGrid = FillShapeApp.Grid;
@@ -11,24 +12,41 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        Grid grid = new AppGrid(rows: 30, columns: 35);
-        // grid.SetRectangleContour([ (1,1), (1,28), (28,28), (28,1) ]);
-        // Console.WriteLine("the contorucellsk");
-        grid.SetCircleContour((15, 15), 10);
-            
+        Grid grid = new AppGrid(rows: 50, columns: 60);
 
-        // // 1. Create and populate your grid
-        // var grid = new AppGrid(30, 30);
-        // grid.SetCircleContour((15, 15), 10);
-        grid.InitialStartCell = (7, 15);
-        grid.FillShapeRecursively();
+        // Choose: Rectangle, Star, Circle, LineShape
+        String ContourType = "LineShape"; 
 
-        //
-        // assume that the screen is 1920 by 1080
-        //
+        switch(ContourType) 
+        {
+          case "Rectangle":
+            grid.SetRectangleContour([ (5,1), (5,38), (38,38), (38,1) ]);
+            grid.InitialStartCell = (25, 25);
+            break;
 
-        // var GridWidth = this.Width;
-        // var GridHeight = this.Heigth - ButtonPanel.Height;
+          case "Star":
+            grid.SetStarContour(centerRow: 23, centerCol: 24, outerRadius: 20, innerRadius: 10);
+            grid.InitialStartCell = (15, 25);
+            break;
+
+          case "Circle":
+            grid.SetCircleContour((22, 25), 20);
+            grid.InitialStartCell = (15, 25);
+            break;
+
+          case "LineShape":
+            grid.SetLineShapeContour([ (1,1),(46,1),(46,46),(14,46),(14,26),(22,26),
+                (22,40),(39,40),(39,12),(12,12),(8,22), (8,40), (1,40),(1,1)]);
+            grid.InitialStartCell = (5, 25);
+            break;
+
+          default:
+            throw new ArgumentException("Unknown contour type: "+ContourType);
+        }
+
+        grid.FillShapeRecursivelyVertically();
+        // grid.FillShapeRecursivelyHorizontally();
+
         var buttonPanelTotalHeight = ButtonPanel.Height + 
                                      ButtonPanel.Margin.Top +
                                      ButtonPanel.Margin.Bottom;
@@ -42,7 +60,6 @@ public partial class MainWindow : Window
             throw new NotImplementedException("CellSize is smaller than a single pixel.");
             
         }
-
 
         // 2. Create the control and assign the grid
         var gridControl = new GridControl
@@ -67,7 +84,7 @@ public partial class MainWindow : Window
     }
     private void OnButtonPlayClick(object? sender, RoutedEventArgs e) 
     {
-    	Console.WriteLine("Play/Pause");
+        MainGrid.PlayPauseAnimation();
     }
     private void OnButtonPlusSmallStepClick(object? sender, RoutedEventArgs e) 
     {

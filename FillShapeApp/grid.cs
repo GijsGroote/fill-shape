@@ -138,7 +138,7 @@ public class Grid
         // add points to directional queue
     }
 
-    public void FillShapeRecursively((int row, int col) StartCell = default)
+    public void FillShapeRecursivelyVertically((int row, int col) StartCell = default)
     {
         // assume that the starting point in within the shape contour
         var (row, col) = StartCell == default ? _initial_start_cell: StartCell;
@@ -152,11 +152,34 @@ public class Grid
         this[row,col] = 1;
         this.AddFilledCell(row,col);
 
-        // call function FillShapeRecursively recursively for every neighboring point which is 0.
+        // call function FillShapeRecursivelyVertically for every neighboring point which is 0.
         foreach ((int d_row, int d_col) in new[]{(1, 0), (-1, 0), (0, 1), (0, -1)})
         {
             if (this[row + d_row, col + d_col] == 0)
-                this.FillShapeRecursively((row + d_row, col + d_col));
+                this.FillShapeRecursivelyVertically((row + d_row, col + d_col));
+        }
+    }
+
+
+    public void FillShapeRecursivelyHorizontally((int row, int col) StartCell = default)
+    {
+        // assume that the starting point in within the shape contour
+        var (row, col) = StartCell == default ? _initial_start_cell: StartCell;
+
+        // if StartingCell is 1, return
+        if (this[row, col] == 1) {
+            return;
+        }
+
+        // else make Stating point 1
+        this[row,col] = 1;
+        this.AddFilledCell(row,col);
+
+        // call function FillShapeRecursivelyHorizontally for every neighboring point which is 0.
+        foreach ((int d_row, int d_col) in new[]{(0, 1), (0, -1), (1, 0), (-1, 0)})
+        {
+            if (this[row + d_row, col + d_col] == 0)
+                this.FillShapeRecursivelyHorizontally((row + d_row, col + d_col));
         }
     }
 
@@ -307,26 +330,7 @@ public class Grid
             var from = vertices[i];
             var to   = vertices[(i + 1) % (points * 2)];
 
-            // draw original line segment
             SetLineContour([from, to]);
-
-            // mirror every drawn point through center
-            for (int row = 0; row < Rows; row++)
-            {
-                for (int col = 0; col < Columns; col++)
-                {
-                    if (_cells[row, col] == 1)
-                    {
-                        int mirrorRow = (2 * centerRow) - row;
-                        int mirrorCol = (2 * centerCol) - col;
-                        if (mirrorRow >= 0 && mirrorRow < Rows &&
-                            mirrorCol >= 0 && mirrorCol < Columns)
-                        {
-                            _cells[mirrorRow, mirrorCol] = 1;
-                        }
-                    }
-                }
-            }
         }
     }
 
