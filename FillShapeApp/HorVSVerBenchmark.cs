@@ -17,8 +17,8 @@ public static class HorizontalVSVerticalBenchmarkTest
         warmup.FillShapeRecursively(direction: AppGrid.ExploreDirection.Vertical);
 
         // RecursiveAlgorithmBenchmark();
-        // IterativelyAlgorithmBenchmark();
-        IterativelyAlgorithmBenchmarkLarge();
+        IterativelyAlgorithmBenchmark();
+        // IterativelyAlgorithmBenchmarkLarge();
 
     }
 

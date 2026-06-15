@@ -86,15 +86,13 @@ Filled shape iteratively horizontally in: 36.7993731 sec
 Filled grid iteratively vertically in: 42.461687 sec
 ```
 
-
 Next, a benchmark was performed using a rectangle covering almost the entire **50 000 × 50 000** grid, output:
 
 ```text
 Out of memory.
 ```
 
-Ah, found a limit there as well. 
-
+Ah, found a limit there.
 
 For now it will be concluded that searching horizontal has is faster compared to searching vertical. But why this difference exists is up for debate. 
 
