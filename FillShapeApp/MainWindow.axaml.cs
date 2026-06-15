@@ -36,7 +36,7 @@ public partial class MainWindow : Window
 
           case "LineShape":
             grid.SetLineShapeContour([ (1,1),(46,1),(46,46),(14,46),(14,26),(22,26),
-                (22,40),(39,40),(39,12),(12,12),(8,22), (8,40), (1,40),(1,1)]);
+                    (22,40),(39,40),(39,12),(12,12),(8,22), (8,40), (1,40),(1,1)]);
             grid.InitialStartCell = (5, 25);
             break;
 
@@ -44,8 +44,8 @@ public partial class MainWindow : Window
             throw new ArgumentException("Unknown contour type: "+ContourType);
         }
 
-        grid.FillShapeRecursivelyVertically();
-        // grid.FillShapeRecursivelyHorizontally();
+        grid.FillShapeRecursively(direction: AppGrid.ExploreDirection.Vertical);
+        // grid.FillShapeTracked(direction: ExploreDirection.Horizontal);
 
         var buttonPanelTotalHeight = ButtonPanel.Height + 
                                      ButtonPanel.Margin.Top +

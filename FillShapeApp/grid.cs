@@ -21,6 +21,7 @@ public class Grid
     public int Rows    { get; }
     public int Columns { get; }
 
+    public enum ExploreDirection { Horizontal, Vertical }
     public HashSet<(int, int)> ContourCells => _contour_cells;
     public void AddContourCells(IEnumerable<(int, int)> cells) => _contour_cells.UnionWith(cells);
     public void AddContourCell((int, int) cell) => _contour_cells.Add(cell);
@@ -120,6 +121,7 @@ public class Grid
         // if already a 1, continue
         // if still a 0, make it a 1, then check all surrounding points which are 0
         // add points to 
+        throw new NotImplementedException();
 
     }
     
@@ -136,52 +138,40 @@ public class Grid
         // if already a 1, continue
         // if still a 0, make it a 1, then check all surrounding points which are 0
         // add points to directional queue
+        throw new NotImplementedException();
     }
 
-    public void FillShapeRecursivelyVertically((int row, int col) StartCell = default)
+    private void FillShapeRecusivelyCore((int row, int col) startCell,
+            ExploreDirection direction = ExploreDirection.Horizontal,
+            Action<int, int>? onVisit = null)
     {
-        // assume that the starting point in within the shape contour
-        var (row, col) = StartCell == default ? _initial_start_cell: StartCell;
+        var (row, col) = startCell;
+        if (this[row, col] == 1) return;
 
-        // if StartingCell is 1, return
-        if (this[row, col] == 1) {
-            return;
-        }
+        this[row, col] = 1;
+        onVisit?.Invoke(row, col);
 
-        // else make Stating point 1
-        this[row,col] = 1;
-        this.AddFilledCell(row,col);
+        (int, int)[] neighbors = direction == ExploreDirection.Horizontal
+            ? new[] { (0, 1), (0, -1), (1, 0), (-1, 0) }
+            : new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
 
-        // call function FillShapeRecursivelyVertically for every neighboring point which is 0.
-        foreach ((int d_row, int d_col) in new[]{(1, 0), (-1, 0), (0, 1), (0, -1)})
+        foreach ((int dRow, int dCol) in neighbors)
         {
-            if (this[row + d_row, col + d_col] == 0)
-                this.FillShapeRecursivelyVertically((row + d_row, col + d_col));
+            if (this[row + dRow, col + dCol] == 0)
+                FillShapeRecusivelyCore((row + dRow, col + dCol), direction, onVisit);
         }
     }
 
+    private (int row, int col) ResolveStartCell((int row, int col) startCell) =>
+        startCell == default ? _initial_start_cell : startCell;
 
-    public void FillShapeRecursivelyHorizontally((int row, int col) StartCell = default)
-    {
-        // assume that the starting point in within the shape contour
-        var (row, col) = StartCell == default ? _initial_start_cell: StartCell;
+    // bare — for benchmarking
+    public void FillShapeRecursively((int row, int col) StartCell = default, ExploreDirection direction = ExploreDirection.Horizontal) =>
+        FillShapeRecusivelyCore(ResolveStartCell(StartCell), direction);
 
-        // if StartingCell is 1, return
-        if (this[row, col] == 1) {
-            return;
-        }
-
-        // else make Stating point 1
-        this[row,col] = 1;
-        this.AddFilledCell(row,col);
-
-        // call function FillShapeRecursivelyHorizontally for every neighboring point which is 0.
-        foreach ((int d_row, int d_col) in new[]{(0, 1), (0, -1), (1, 0), (-1, 0)})
-        {
-            if (this[row + d_row, col + d_col] == 0)
-                this.FillShapeRecursivelyHorizontally((row + d_row, col + d_col));
-        }
-    }
+    // with tracking — for visualisation
+    public void FillShapeRecursivelyTracked((int row, int col) StartCell = default, ExploreDirection direction = ExploreDirection.Horizontal) =>
+        FillShapeRecusivelyCore(ResolveStartCell(StartCell), direction, (r, c) => AddFilledCell(r, c));
 
     private double Distance((int row, int col) a, (int row, int col) b)
     {
@@ -336,7 +326,7 @@ public class Grid
 
     public void SetLineShapeContour((int row, int col)[] corners)
     {
-        // check if the shape is valid.
+        // TODO: check if the shape is valid.
 
         this.SetLineContour(corners);
     }
