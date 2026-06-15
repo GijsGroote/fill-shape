@@ -45,12 +45,12 @@ public static class HorizontalVSVerticalBenchmarkTest
 
     private static void IterativelyAlgorithmBenchmarkLarge()
     {
-        AppGrid FillHorizontallyGrid = new Grid(50000, 50000);
-        FillHorizontallyGrid.SetRectangleContour([ (5,5), (5,49500), (49500,49500), (49500,5) ]);
+        AppGrid FillHorizontallyGrid = new Grid(15000, 15000);
+        FillHorizontallyGrid.SetRectangleContour([ (5,5), (5,14500), (14500,14500), (14500,5) ]);
         FillHorizontallyGrid.InitialStartCell = (25, 25);
 
-        AppGrid FillVerticallyGrid = new Grid(50000, 50000);
-        FillVerticallyGrid.SetRectangleContour([ (5,5), (5,49500), (49500,49500), (49500,5) ]);
+        AppGrid FillVerticallyGrid = new Grid(15000, 15000);
+        FillVerticallyGrid.SetRectangleContour([ (5,5), (5,14500), (14500,14500), (14500,5) ]);
         FillVerticallyGrid.InitialStartCell = (25, 25);
 
         var sw = System.Diagnostics.Stopwatch.StartNew();

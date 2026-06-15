@@ -2,12 +2,12 @@
 
 A contour of a predefined shape is drawn on a grid consisting of a specified number of rows and columns.
 
-The available shapes are:
+The available contours of shapes are:
 
 * Rectangle
 * Circle
 * Star
-* Line
+* LineShape (provide points of a simple closed contour)
 
 The goal is to fill the area enclosed by the contour, starting from a given point inside the shape and continuing until the contour boundary is reached.
 
@@ -80,14 +80,21 @@ A likely explanation is that the grid is stored in row-major order. Horizontal t
 
 ## Larger Test
 
-Next, a benchmark was performed using a rectangle covering almost the entire **50,000 × 50,000** grid.
+Next, a benchmark was performed using a rectangle covering almost the entire **15 000 × 15 000** grid, output:
+```text
+Filled shape iteratively horizontally in: 36.7993731 sec
+Filled grid iteratively vertically in: 42.461687 sec
+```
 
-Output:
+
+Next, a benchmark was performed using a rectangle covering almost the entire **50 000 × 50 000** grid, output:
 
 ```text
-~/Documents/fill-shape/FillShapeApp$ dotnet run --benchmark
 Out of memory.
 ```
+
+Ah, found a limit there as well. 
+
 
 For now it will be concluded that searching horizontal has is faster compared to searching vertical. But why this difference exists is up for debate. 
 
