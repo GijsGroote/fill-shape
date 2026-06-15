@@ -16,11 +16,30 @@ public static class HorizontalVSVerticalBenchmarkTest
         warmup.InitialStartCell = (5, 5);
         warmup.FillShapeRecursively(direction: AppGrid.ExploreDirection.Vertical);
 
-        RecursiveAlgorithmBenchmark();
+        // RecursiveAlgorithmBenchmark();
+        IterativelyAlgorithmBenchmark();
 
+    }
 
+    private static void IterativelyAlgorithmBenchmark()
+    {
+        AppGrid FillHorizontallyGrid = new Grid(10000, 10000);
+        FillHorizontallyGrid.SetRectangleContour([ (5,5), (5,9500), (9500,9500), (9500,5) ]);
+        FillHorizontallyGrid.InitialStartCell = (25, 25);
 
+        AppGrid FillVerticallyGrid = new Grid(10000, 10000);
+        FillVerticallyGrid.SetRectangleContour([ (5,5), (5,9500), (9500,9500), (9500,5) ]);
+        FillVerticallyGrid.InitialStartCell = (25, 25);
 
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        FillHorizontallyGrid.FillShapeIteratively(direction: AppGrid.ExploreDirection.Horizontal);
+        sw.Stop();
+        Console.WriteLine("Filled shape iteratively horizontally in: " + sw.Elapsed.TotalSeconds + " sec");
+
+        sw.Restart();
+        FillVerticallyGrid.FillShapeIteratively(direction: AppGrid.ExploreDirection.Vertical);
+        sw.Stop();
+        Console.WriteLine("Filled grid iteratively vertically in: " + sw.Elapsed.TotalSeconds + " sec");
     }
 
     private static void RecursiveAlgorithmBenchmark()
@@ -38,11 +57,11 @@ public static class HorizontalVSVerticalBenchmarkTest
         var sw = System.Diagnostics.Stopwatch.StartNew();
         FillHorizontallyGrid.FillShapeRecursively(direction: AppGrid.ExploreDirection.Horizontal);
         sw.Stop();
-        Console.WriteLine("Filled grid horizontally in: " + sw.Elapsed.TotalSeconds + " sec");
+        Console.WriteLine("Filled grid recursively horizontally in: " + sw.Elapsed.TotalSeconds + " sec");
 
         sw.Restart();
         FillVerticallyGrid.FillShapeRecursively(direction: AppGrid.ExploreDirection.Vertical);
         sw.Stop();
-        Console.WriteLine("Filled grid vertically in: " + sw.Elapsed.TotalSeconds + " sec");
+        Console.WriteLine("Filled grid recursively vertically in: " + sw.Elapsed.TotalSeconds + " sec");
     }
 }

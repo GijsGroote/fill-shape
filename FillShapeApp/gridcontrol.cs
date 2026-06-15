@@ -96,8 +96,11 @@ public override void Render(DrawingContext context)
     }
     public void TakeSteps(int steps = 1)
     {
-        _max_filled_cells_idx = Math.Clamp(_max_filled_cells_idx + steps, 0, _grid.OrderedFilledCells.Count);
-        InvalidateVisual();
+        if (_grid is AppGrid validGrid)
+        {
+            _max_filled_cells_idx = Math.Clamp(_max_filled_cells_idx + steps, 0, validGrid.OrderedFilledCells.Count);
+            InvalidateVisual();
+        }
     }
 
 
@@ -121,15 +124,18 @@ public override void Render(DrawingContext context)
 
     private async Task AnimateFilledCells(CancellationToken ct)
     {
-        while (_max_filled_cells_idx <= _grid.OrderedFilledCells.Count)
+        if (_grid is AppGrid validGrid)
         {
-            InvalidateVisual();
-            try
+            while (_max_filled_cells_idx <= validGrid.OrderedFilledCells.Count)
             {
-                await Task.Delay(150, ct);
-                _max_filled_cells_idx++;
+                InvalidateVisual();
+                try
+                {
+                    await Task.Delay(150, ct);
+                    _max_filled_cells_idx++;
+                }
+                catch (OperationCanceledException) { break; }
             }
-            catch (OperationCanceledException) { break; }
         }
     }
 }

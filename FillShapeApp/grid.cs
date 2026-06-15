@@ -141,7 +141,33 @@ public class Grid
         throw new NotImplementedException();
     }
 
-    private void FillShapeRecusivelyCore((int row, int col) startCell,
+    private void FillShapeIterativelyCore((int row, int col) startCell, ExploreDirection direction = ExploreDirection.Horizontal, Action<int, int>? onVisit = null)
+    {
+        (int, int)[] neighbors = direction == ExploreDirection.Horizontal
+            ? new[] { (0, 1), (0, -1), (1, 0), (-1, 0) }
+            : new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+
+        var stack = new Stack<(int, int)>();
+        stack.Push(startCell);
+
+        while (stack.Count > 0)
+        {
+            var (row, col) = stack.Pop();
+            if (this[row, col] == 1) continue;
+
+            this[row, col] = 1;
+            onVisit?.Invoke(row, col);
+
+            foreach ((int dRow, int dCol) in neighbors)
+            {
+                int nr = row + dRow, nc = col + dCol;
+                if (nr >= 0 && nr < Rows && nc >= 0 && nc < Columns && this[nr, nc] == 0)
+                    stack.Push((nr, nc));
+            }
+        }
+    }
+
+    private void FillShapeRecursivalyCore((int row, int col) startCell,
             ExploreDirection direction = ExploreDirection.Horizontal,
             Action<int, int>? onVisit = null)
     {
@@ -158,7 +184,7 @@ public class Grid
         foreach ((int dRow, int dCol) in neighbors)
         {
             if (this[row + dRow, col + dCol] == 0)
-                FillShapeRecusivelyCore((row + dRow, col + dCol), direction, onVisit);
+                FillShapeRecursivalyCore((row + dRow, col + dCol), direction, onVisit);
         }
     }
 
@@ -167,11 +193,17 @@ public class Grid
 
     // bare — for benchmarking
     public void FillShapeRecursively((int row, int col) StartCell = default, ExploreDirection direction = ExploreDirection.Horizontal) =>
-        FillShapeRecusivelyCore(ResolveStartCell(StartCell), direction);
+        FillShapeRecursivalyCore(ResolveStartCell(StartCell), direction);
+
+    public void FillShapeIteratively((int row, int col) StartCell = default, ExploreDirection direction = ExploreDirection.Horizontal) =>
+        FillShapeIterativelyCore(ResolveStartCell(StartCell), direction);
 
     // with tracking — for visualisation
     public void FillShapeRecursivelyTracked((int row, int col) StartCell = default, ExploreDirection direction = ExploreDirection.Horizontal) =>
-        FillShapeRecusivelyCore(ResolveStartCell(StartCell), direction, (r, c) => AddFilledCell(r, c));
+        FillShapeRecursivalyCore(ResolveStartCell(StartCell), direction, (r, c) => AddFilledCell(r, c));
+
+    public void FillShapeIterativelyTracked((int row, int col) StartCell = default, ExploreDirection direction = ExploreDirection.Horizontal) =>
+        FillShapeIterativelyCore(ResolveStartCell(StartCell), direction, (r, c) => AddFilledCell(r, c));
 
     private double Distance((int row, int col) a, (int row, int col) b)
     {
