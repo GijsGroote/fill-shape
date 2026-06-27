@@ -108,11 +108,10 @@ public class Grid
         Console.WriteLine("┘");
     }
 
-    public void FillShapeSingleQueue((int row, int col) StartingCell)
-    {
+    public void FillShapeSingleQueue((int row, int col) StartingCell) =>
         // assume that a shape contour is draw in the grid
         // assume that the starting point in within the shape contour
-        
+
         // make 4 queue's one to check each direction (N, E, S, W) 
         // make a single queue 
 
@@ -123,13 +122,10 @@ public class Grid
         // add points to 
         throw new NotImplementedException();
 
-    }
-    
-    public void FillShapeDirectionalQueues((int row, int col) StartingCell)
-    {
+    public void FillShapeDirectionalQueues((int row, int col) StartingCell) =>
         // assume that a shape contour is draw in the grid
         // assume that the starting point in within the shape contour
-        
+
         // make 4 queue's one to check each direction (N, E, S, W) 
         // make a single queue 
 
@@ -139,7 +135,6 @@ public class Grid
         // if still a 0, make it a 1, then check all surrounding points which are 0
         // add points to directional queue
         throw new NotImplementedException();
-    }
 
     private void FillShapeIterativelyCore((int row, int col) startCell, ExploreDirection direction = ExploreDirection.Horizontal, Action<int, int>? onVisit = null)
     {
@@ -263,6 +258,22 @@ public class Grid
         }
     }
 
+    private void SetOvalCells((int row, int col) center, int row, int col)
+    {
+        List<(int, int)> OvalCells = new List<(int, int)> {
+            (center.row + row, center.col + col),
+            (center.row - row, center.col + col),
+            (center.row + row, center.col - col),
+            (center.row - row, center.col - col),
+        };
+
+        foreach ((int, int) OvalCell in OvalCells)
+        {
+            this[OvalCell.Item1, OvalCell.Item2] = 1;
+            AddContourCell(OvalCell);
+        }
+    }
+
     private void SetLineContour((int row, int col)[] corners)
     {
         if (corners.Length < 2)
@@ -326,6 +337,64 @@ public class Grid
         }
     }
 
+    public void SetOvalContour((int row, int col) center, int radiusRow, int radiusCol)
+    {
+        if (radiusRow <= 0 || radiusCol <= 0)
+            throw new ArgumentException("Radii must be positive.");
+
+        long a = radiusCol;
+        long b = radiusRow;
+        long a2 = a * a;
+        long b2 = b * b;
+
+        long x = 0, y = b;
+        long dx = 0;
+        long dy = 2 * a2 * b;
+        long d = b2 - a2 * b + a2 / 4;
+
+        // region 1: while the slope magnitude is less than 1
+        while (dx < dy)
+        {
+            SetOvalCells(center, (int)y, (int)x);
+            if (d < 0)
+            {
+                x++;
+                dx += 2 * b2;
+                d += dx + b2;
+            }
+            else
+            {
+                x++;
+                y--;
+                dx += 2 * b2;
+                dy -= 2 * a2;
+                d += dx - dy + b2;
+            }
+        }
+
+        // region 2: while the slope magnitude is greater than 1
+        d = b2 * (x * x + x) + a2 * ((y - 1) * (y - 1)) - a2 * b2;
+
+        while (y >= 0)
+        {
+            SetOvalCells(center, (int)y, (int)x);
+            if (d > 0)
+            {
+                y--;
+                dy -= 2 * a2;
+                d += a2 - dy;
+            }
+            else
+            {
+                y--;
+                x++;
+                dx += 2 * b2;
+                dy -= 2 * a2;
+                d += dx - dy + a2;
+            }
+        }
+    }
+
     public void SetStarContour(int centerRow, int centerCol, int outerRadius, int innerRadius, int points = 5)
     {
         if (points < 3)
@@ -356,10 +425,8 @@ public class Grid
         }
     }
 
-    public void SetLineShapeContour((int row, int col)[] corners)
-    {
+    public void SetLineShapeContour((int row, int col)[] corners) =>
         // TODO: check if the shape is valid.
 
         this.SetLineContour(corners);
-    }
 }

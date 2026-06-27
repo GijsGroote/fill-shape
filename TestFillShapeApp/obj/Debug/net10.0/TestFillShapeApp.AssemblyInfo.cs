@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TestFillShapeApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1a5481ccb91a40b78553d798a4ab6b64ee3883fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d7743df93a9c7f3003f2d8476660463d5847391")]
 [assembly: System.Reflection.AssemblyProductAttribute("TestFillShapeApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TestFillShapeApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

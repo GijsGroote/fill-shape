@@ -14,8 +14,8 @@ public partial class MainWindow : Window
 
         Grid grid = new AppGrid(rows: 50, columns: 60);
 
-        // Choose: Rectangle, Star, Circle, LineShape
-        String ContourType = "LineShape"; 
+        // Choose: Rectangle, Star, Circle, LineShape, Oval
+        String ContourType = "Oval"; 
 
         switch(ContourType) 
         {
@@ -38,6 +38,11 @@ public partial class MainWindow : Window
             grid.SetLineShapeContour([ (1,1),(46,1),(46,46),(14,46),(14,26),(22,26),
                     (22,40),(39,40),(39,12),(12,12),(8,22), (8,40), (1,40),(1,1)]);
             grid.InitialStartCell = (5, 25);
+            break;
+
+          case "Oval":
+            grid.SetOvalContour((25, 30), 10, 15) ;
+            grid.InitialStartCell = (25, 25);
             break;
 
           default:
